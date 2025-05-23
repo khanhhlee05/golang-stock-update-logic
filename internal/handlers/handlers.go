@@ -17,8 +17,8 @@ import (
 )
 
 type StockDataEntry struct {
-	symbol       string
-	currentPrice float64 `json:"c"`
+	Symbol       string
+	CurrentPrice float64 `json:"c"`
 }
 
 type StockData struct {
@@ -46,8 +46,8 @@ func FetchStockData(symbol string) (StockDataEntry, error) {
 	}
 
 	stockData := StockDataEntry{
-		currentPrice: parsed.C,
-		symbol:       symbol,
+		CurrentPrice: parsed.C,
+		Symbol:       symbol,
 	}
 
 	fmt.Println("Stock Data: ", stockData)
@@ -99,6 +99,7 @@ func GetAllUserStocks() ([]string, []string, error) {
 }
 
 func UpdatePortfolio(userID string, stockPrices models.GlobalStock) error {
+	fmt.Println("Updating portfolio for user ID:", userID)
 	holding_collection := db.MongoClient.Database("development").Collection("userholdings")
 	user_collection := db.MongoClient.Database("development").Collection("users")
 	portfolio_collection := db.MongoClient.Database("development").Collection("portfolios")
@@ -140,7 +141,11 @@ func UpdatePortfolio(userID string, stockPrices models.GlobalStock) error {
 
 	var totalValue float64 = user.BankingAccountData.CashValue
 	for _, stock := range userHolding.Holdings {
-		var updatedPrice float64 = stockPrices.Symbol
+		updatedPrice, ok := stockPrices.Prices[stock.Symbol]
+		if !ok {
+			log.Printf("No price found for symbol %s", stock.Symbol)
+			continue
+		}
 		totalValue += stock.Quantity * updatedPrice
 	}
 
@@ -177,6 +182,6 @@ func UpdatePortfolio(userID string, stockPrices models.GlobalStock) error {
 		log.Println("Error updating portfolio data: ", err)
 		return err
 	}
-
+	log.Println("Portfolio updated successfully for user ID:", userID)
 	return nil
 }

@@ -39,7 +39,7 @@ type BankingAccountData struct {
 }
 
 type GlobalStock struct {
-	Symbol float64
+	Prices map[string]float64
 }
 
 //TODO: presave method: accountBalance = stockValue + cashValue
