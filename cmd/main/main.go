@@ -46,6 +46,9 @@ func main() {
 		Prices: stockPrices,
 	}
 
+	// Update the portfolio for each user
+	// using goroutines for concurrent processing
+
 	var wg sync.WaitGroup
 
 	errorCh := make(chan error, len(userIds))
