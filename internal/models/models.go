@@ -38,4 +38,8 @@ type BankingAccountData struct {
 	CashValue      float64 `bson:"cash"`
 }
 
+type GlobalStock struct {
+	Symbol float64
+}
+
 //TODO: presave method: accountBalance = stockValue + cashValue
