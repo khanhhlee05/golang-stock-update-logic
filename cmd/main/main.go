@@ -9,7 +9,16 @@ import (
 	"time"
 )
 
+func measureExecutionTime(name string) func() {
+	start := time.Now()
+	return func() {
+		duration := time.Since(start)
+		fmt.Printf("%s took %v\n", name, duration)
+	}
+}
+
 func main() {
+	defer measureExecutionTime("Main Execution")()
 	db.InitMongoDB()
 
 	fmt.Println("MongoDB Client Initialized: ", db.MongoClient != nil)
