@@ -1,10 +1,17 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
+
+	"stock-update-lambda/internal/models"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type StockData struct {
@@ -39,4 +46,43 @@ func FetchStockData(symbol string) (StockData, error) {
 
 	fmt.Println("Stock Data: ", stockData)
 	return stockData, nil
+}
+
+func GetAllUserStocks(collection *mongo.Collection) ([]string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	cursor, err := collection.Find(ctx, bson.M{})
+	if err != nil {
+		log.Println("Error fetching user stocks: ", err)
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var userHoldings []models.UserHolding
+	for cursor.Next(ctx) {
+		var holding models.UserHolding
+		err := cursor.Decode(&holding)
+		if err != nil {
+			log.Println("Error decoding user stocks: ", err)
+			return nil, err
+		}
+		userHoldings = append(userHoldings, holding)
+	}
+
+	uniqueStocks := make(map[string]struct{})
+
+	for _, holding := range userHoldings {
+		for _, stock := range holding.Holdings {
+			uniqueStocks[stock.Symbol] = struct{}{}
+		}
+	}
+
+	var result []string
+	for stock := range uniqueStocks {
+		result = append(result, stock)
+	}
+
+	fmt.Println("Unique Stocks: ", result)
+	return result, nil
 }

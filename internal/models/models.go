@@ -17,6 +17,7 @@ type PortfolioEntry struct {
 }
 
 type UserHolding struct {
+	ID       primitive.ObjectID `bson:"_id,omitempty"`
 	UserID   primitive.ObjectID `bson:"userId"`
 	Holdings []UserHoldingEntry `bson:"stocks"`
 }

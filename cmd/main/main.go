@@ -11,5 +11,6 @@ func main() {
 
 	fmt.Println("MongoDB Client Initialized: ", db.MongoClient != nil)
 
-	handlers.FetchStockData("AAPL")
+	// handlers.FetchStockData("ggesttdadfasd")
+	handlers.GetAllUserStocks(db.MongoClient.Database("development").Collection("userholdings"))
 }
