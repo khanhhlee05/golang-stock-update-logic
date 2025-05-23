@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"stock-update-lambda/internal/db"
-
+	"stock-update-lambda/internal/handlers"
 )
 
 func main() {
@@ -11,5 +11,5 @@ func main() {
 
 	fmt.Println("MongoDB Client Initialized: ", db.MongoClient != nil)
 
-	
+	handlers.FetchStockData("AAPL")
 }

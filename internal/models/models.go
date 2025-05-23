@@ -1,8 +1,14 @@
 package models
 
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
 type Portfolio struct {
-	UserID primitive.ObjectID `bson:"userId"`
-	Portfolio []PortfolioEntry `bson:"portfolio"`
+	UserID    primitive.ObjectID `bson:"userId"`
+	Portfolio []PortfolioEntry   `bson:"portfolio"`
 }
 
 type PortfolioEntry struct {
@@ -11,13 +17,13 @@ type PortfolioEntry struct {
 }
 
 type UserHolding struct {
-	UserID primitive.ObjectID `bson:"userId"`
+	UserID   primitive.ObjectID `bson:"userId"`
 	Holdings []UserHoldingEntry `bson:"stocks"`
 }
 
 type UserHoldingEntry struct {
-	Symbol string `bson:"stockSymbol"`
-	Quantity float64 `bson:"quantity"`
+	Symbol        string  `bson:"stockSymbol"`
+	Quantity      float64 `bson:"quantity"`
 	PurchasePrice float64 `bson:"purchasePrice"`
 }
 
@@ -27,7 +33,8 @@ type User struct {
 
 type BankingAccountData struct {
 	AccountBalance float64 `bson:"accountBalance"`
-	StockValue float64 `bson:"stockValue"`
-	CashValue float64 `bson:"cash"`
+	StockValue     float64 `bson:"stockValue"`
+	CashValue      float64 `bson:"cash"`
 }
+
 //TODO: presave method: accountBalance = stockValue + cashValue
