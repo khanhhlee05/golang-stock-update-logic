@@ -124,6 +124,11 @@ func UpdatePortfolio(userID string, stockPrices models.GlobalStock) error {
 		return err
 	}
 
+	if len(userHolding.Holdings) == 0 {
+		log.Println("No holdings found for user ID:", userID)
+		return nil
+	}
+
 	var user models.User
 	err = user_collection.FindOne(ctx, bson.M{"_id": objectID}).Decode(&user)
 
