@@ -2,7 +2,10 @@ module stock-update-lambda
 
 go 1.24.2
 
-require go.mongodb.org/mongo-driver v1.17.3
+require (
+	github.com/aws/aws-lambda-go v1.48.0
+	go.mongodb.org/mongo-driver v1.17.3
+)
 
 require (
 	github.com/golang/snappy v0.0.4 // indirect
