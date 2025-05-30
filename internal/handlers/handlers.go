@@ -56,7 +56,7 @@ func FetchStockData(symbol string) (StockDataEntry, error) {
 }
 
 func GetAllUserStocks() ([]string, []string, error) {
-	collection := db.MongoClient.Database("development").Collection("userholdings")
+	collection := db.MongoClient.Database("production").Collection("userholdings")
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
@@ -100,9 +100,9 @@ func GetAllUserStocks() ([]string, []string, error) {
 
 func UpdatePortfolio(userID string, stockPrices models.GlobalStock) error {
 	fmt.Println("Updating portfolio for user ID:", userID)
-	holding_collection := db.MongoClient.Database("development").Collection("userholdings")
-	user_collection := db.MongoClient.Database("development").Collection("users")
-	portfolio_collection := db.MongoClient.Database("development").Collection("portfolios")
+	holding_collection := db.MongoClient.Database("production").Collection("userholdings")
+	user_collection := db.MongoClient.Database("production").Collection("users")
+	portfolio_collection := db.MongoClient.Database("production").Collection("portfolios")
 
 	// Fetch stock data for the user
 	ctx, cancel := context.WithTimeout(context.Background(), 15*60*time.Second)
@@ -122,11 +122,6 @@ func UpdatePortfolio(userID string, stockPrices models.GlobalStock) error {
 	if err != nil {
 		log.Println("Error fetching user holdings: ", err)
 		return err
-	}
-
-	if len(userHolding.Holdings) == 0 {
-		log.Println("No holdings found for user ID:", userID)
-		return nil
 	}
 
 	var user models.User
